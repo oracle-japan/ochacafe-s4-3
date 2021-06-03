@@ -1,0 +1,11 @@
+apiVersion: tekton.dev/v1alpha1
+kind: PipelineResource
+metadata:
+  name: hello-world-go-git
+spec:
+  type: git
+  params:
+    - name: revision
+      value: main
+    - name: url
+      value: xxxxxxxxxx

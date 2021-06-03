@@ -1,0 +1,21 @@
+apiVersion: tekton.dev/v1beta1
+kind: Pipeline
+metadata:
+  name: build-push-pipeline
+spec:
+  resources:
+    - name: docker-source
+      type: git
+    - name: builtImage
+      type: image
+  tasks:
+    - name: build-and-push
+      taskRef:
+        name: build-and-push
+      resources:
+        inputs:
+          - name: docker-source
+            resource: docker-source
+        outputs:
+          - name: builtImage
+            resource: builtImage

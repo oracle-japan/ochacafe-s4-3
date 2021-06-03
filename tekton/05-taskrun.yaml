@@ -1,0 +1,20 @@
+apiVersion: tekton.dev/v1beta1
+kind: TaskRun
+metadata:
+  name: build-push-task-run
+spec:
+  serviceAccountName: build-bot
+  taskRef:
+    name: build-and-push
+  params:
+    - name: pathToDockerFile
+      value: Dockerfile
+  resources:
+    inputs:
+      - name: docker-source
+        resourceRef:
+          name: hello-world-go-git
+    outputs:
+      - name: builtImage
+        resourceRef:
+          name: hello-world-go-image

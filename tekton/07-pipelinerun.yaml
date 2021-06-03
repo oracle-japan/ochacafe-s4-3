@@ -1,0 +1,15 @@
+apiVersion: tekton.dev/v1beta1
+kind: PipelineRun
+metadata:
+  name: build-push-pr
+spec:
+  serviceAccountName: build-bot
+  pipelineRef:
+    name: build-push-pipeline
+  resources:
+  - name: docker-source
+    resourceRef:
+      name: hello-world-go-git
+  - name: builtImage
+    resourceRef:
+      name: hello-world-go-image
