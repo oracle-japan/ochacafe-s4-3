@@ -13,7 +13,9 @@ Kubernetesクラスタ構築されていることが前提です。
 kubectl apply --filename https://storage.googleapis.com/tekton-releases/pipeline/latest/release.yaml
 ```
 
+コマンド結果
 ```コマンド結果
+$ kubectl apply --filename https://storage.googleapis.com/tekton-releases/pipeline/latest/release.yaml
 namespace/tekton-pipelines created
 podsecuritypolicy.policy/tekton-pipelines created
 clusterrole.rbac.authorization.k8s.io/tekton-pipelines-controller-cluster-access created
@@ -66,7 +68,9 @@ service/tekton-pipelines-webhook created
 kubectl get pods --namespace tekton-pipelines
 ```
 
+コマンド結果
 ```コマンド結果
+$ kubectl get pods --namespace tekton-pipelines
 NAME                                           READY   STATUS    RESTARTS   AGE
 tekton-pipelines-controller-5cf4d4867f-cw4kt   1/1     Running   0          51s
 tekton-pipelines-webhook-57bfb4b4d7-bj85t      1/1     Running   0          49s
@@ -78,7 +82,9 @@ tekton-pipelines-webhook-57bfb4b4d7-bj85t      1/1     Running   0          49s
 kubectl apply --filename https://storage.googleapis.com/tekton-releases/dashboard/latest/tekton-dashboard-release.yaml
 ```
 
+コマンド結果
 ```コマンド結果
+$ kubectl apply --filename https://storage.googleapis.com/tekton-releases/dashboard/latest/tekton-dashboard-release.yaml
 customresourcedefinition.apiextensions.k8s.io/extensions.dashboard.tekton.dev created
 serviceaccount/tekton-dashboard created
 clusterrole.rbac.authorization.k8s.io/tekton-dashboard-backend created
@@ -104,6 +110,7 @@ kubectl patch service tekton-dashboard -n tekton-pipelines -p '{"spec": {"type":
 ```
 
 ```コマンド結果
+$ kubectl patch service tekton-dashboard -n tekton-pipelines -p '{"spec": {"type": "LoadBalancer"}}'
 service/tekton-dashboard patched
 ```
 
@@ -113,7 +120,9 @@ EXTERNAL-IPを確認します。ここでは、コマンド結果から「140.83
 kubectl get svc -n tekton-pipelines
 ```
 
+コマンド結果
 ```コマンド結果
+$ kubectl get svc -n tekton-pipelines
 NAME                          TYPE           CLUSTER-IP      EXTERNAL-IP     PORT(S)                              AGE
 tekton-dashboard              LoadBalancer   10.96.211.23    140.83.50.157   9097:30259/TCP                       109s
 tekton-pipelines-controller   ClusterIP      10.96.111.154   <none>          9090/TCP,8080/TCP                    3m46s
@@ -140,7 +149,9 @@ mkdir bin
 tar -xvzf tkn_0.18.0_Linux_x86_64.tar.gz
 ```
 
+コマンド結果
 ```コマンド結果
+$ tar -xvzf tkn_0.18.0_Linux_x86_64.tar.gz
 LICENSE
 README.md
 tkn
@@ -168,7 +179,9 @@ tknコマンドを実行してバージョンを確認します。
 tkn version
 ```
 
+コマンド結果
 ```コマンド結果
+$ tkn version
 Client version: 0.18.0
 Pipeline version: v0.24.1
 Dashboard version: v0.17.0
@@ -189,7 +202,9 @@ cd tekton
 cat 01-secret-serviceaccount.yaml
 ```
 
+コマンド結果
 ```コマンド結果
+$ cat 01-secret-serviceaccount.yaml
 apiVersion: v1
 kind: Secret
 metadata:
@@ -213,7 +228,9 @@ secrets:
 kubectl apply -f 01-secret-serviceaccount.yaml
 ```
 
+コマンド結果
 ```コマンド結果
+$ kubectl apply -f 01-secret-serviceaccount.yaml
 secret/basic-user-pass created
 serviceaccount/build-bot created
 ```
@@ -224,7 +241,9 @@ serviceaccount/build-bot created
 cat 02-gitPipelineResource.yaml
 ```
 
+コマンド結果
 ```コマンド結果
+$ cat 02-gitPipelineResource.yaml
 apiVersion: tekton.dev/v1alpha1
 kind: PipelineResource
 metadata:
@@ -242,7 +261,9 @@ spec:
 kubectl apply -f 02-gitPipelineResource.yaml
 ```
 
+コマンド結果
 ```コマンド結果
+$ kubectl apply -f 02-gitPipelineResource.yaml
 pipelineresource.tekton.dev/hello-world-go-git created
 ```
 
@@ -252,7 +273,9 @@ pipelineresource.tekton.dev/hello-world-go-git created
 cat 03-imagePipelineResource.yaml
 ```
 
+コマンド結果
 ```コマンド結果
+$ cat 03-imagePipelineResource.yaml
 apiVersion: tekton.dev/v1alpha1
 kind: PipelineResource
 metadata:
@@ -268,7 +291,9 @@ spec:
 kubectl apply -f 03-imagePipelineResource.yaml
 ```
 
+コマンド結果
 ```コマンド結果
+$ kubectl apply -f 03-imagePipelineResource.yaml
 pipelineresource.tekton.dev/hello-world-go-image created
 ```
 
@@ -276,7 +301,9 @@ pipelineresource.tekton.dev/hello-world-go-image created
 kubectl apply -f 04-task.yaml
 ```
 
+コマンド結果
 ```コマンド結果
+$ kubectl apply -f 04-task.yaml
 task.tekton.dev/build-and-push created
 ```
 
@@ -284,7 +311,9 @@ task.tekton.dev/build-and-push created
 kubectl apply -f 05-taskrun.yaml
 ```
 
+コマンド結果
 ```コマンド結果
+$ kubectl apply -f 05-taskrun.yaml
 taskrun.tekton.dev/build-push-task-run created
 ```
 
@@ -292,7 +321,9 @@ taskrun.tekton.dev/build-push-task-run created
 kubectl apply -f 06-pipeline.yaml
 ```
 
+コマンド結果
 ```コマンド結果
+$ kubectl apply -f 06-pipeline.yaml
 pipeline.tekton.dev/build-push-pipeline created
 ```
 
@@ -300,7 +331,9 @@ pipeline.tekton.dev/build-push-pipeline created
 kubectl apply -f 07-pipelinerun.yaml
 ```
 
+コマンド結果
 ```コマンド結果
+$ kubectl apply -f 07-pipelinerun.yaml
 pipelinerun.tekton.dev/build-push-pr created
 ```
 
@@ -310,7 +343,9 @@ TEKTON Dashboardで状況を確認できます。以下コマンドの実行で�
 tkn pipelinerun logs build-push-pr
 ```
 
+コマンド結果
 ```コマンド結果
+$ tkn pipelinerun logs build-push-pr
 [build-and-push : git-source-docker-source-6cb98] {"level":"info","ts":1622703291.5306501,"caller":"git/git.go:169","msg":"Successfully cloned https://xxxxxxxxxx/xxxxxxxxx/xxxxxxxxxx.git @ 600bbea2560177605044546bcddcc3709bf0bb27 (grafted, HEAD, origin/main) in path /workspace/docker-source"}
 [build-and-push : git-source-docker-source-6cb98] {"level":"info","ts":1622703291.544796,"caller":"git/git.go:207","msg":"Successfully initialized and updated submodules in path /workspace/docker-source"}
 
