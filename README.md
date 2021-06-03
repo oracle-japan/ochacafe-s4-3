@@ -106,7 +106,7 @@ clusterrolebinding.rbac.authorization.k8s.io/tekton-dashboard-tenant created
 clusterrolebinding.rbac.authorization.k8s.io/tekton-dashboard-extensions created
 ```
 
-ServiceのタイプをLoadBalancerに変更して、外部からアクセスできるようにします。
+`Service`のタイプを`LoadBalancer`に変更して、外部からアクセスできるようにします。
 
 コピー&ペースト用
 ```kubectlコマンド
@@ -118,7 +118,7 @@ $ kubectl patch service tekton-dashboard -n tekton-pipelines -p '{"spec": {"type
 service/tekton-dashboard patched
 ```
 
-EXTERNAL-IPを確認します。ここでは、コマンド結果から「140.83.50.157:9097」にブラウザでアクセスします。
+`EXTERNAL-IP`を確認します。ここでは、コマンド結果から「140.83.50.157:9097」にブラウザでアクセスします。
 
 コピー&ペースト用
 ```kubectlコマンド
@@ -171,7 +171,7 @@ tkn
 mv tkn bin
 ```
 
-パスを通します。$homeはご自身のホームディレクトリになります。
+パスを通します。`$home`はご自身のホームディレクトリになります。
 
 コピー&ペースト用
 ```linuxコマンド
@@ -202,14 +202,14 @@ Dashboard version: v0.17.0
 
 ### TEKTONパイプライン構築
 
-本リポジトリにある'tekton'ディレクトリ内にある01～07のマニフェストファイルを'kubectl apply'コマンドを実行します。
+本リポジトリにある`tekton`ディレクトリ内にある01～07のマニフェストファイルを`kubectl apply`コマンドを実行します。
 
 コピー&ペースト用
 ```linuxコマンド
 cd tekton
 ```
 
-'annotations'のULR、'username'、'password'は、ご自身のコンテナレジストリの情報を入力してください。OCIRの場合は、各リージョンは[こちら](https://docs.oracle.com/ja-jp/iaas/Content/Registry/Concepts/registryprerequisites.htm)で確認してください。
+`annotations`のULR、`username`、`password`は、ご自身のコンテナレジストリの情報を入力してください。OCIRの場合は、各リージョンは[こちら](https://docs.oracle.com/ja-jp/iaas/Content/Registry/Concepts/registryprerequisites.htm)で確認してください。
 
 
 コピー&ペースト用
@@ -251,7 +251,7 @@ secret/basic-user-pass created
 serviceaccount/build-bot created
 ```
 
-'value'には、'git clone'するご自身のgitリポジトリを指定します。
+`value`には、`git clone`するご自身のgitリポジトリを指定します。
 
 コピー&ペースト用
 ```linuxコマンド
@@ -285,7 +285,7 @@ $ kubectl apply -f 02-gitPipelineResource.yaml
 pipelineresource.tekton.dev/hello-world-go-git created
 ```
 
-'value'には、ご自身のイメージリポジトリのパスを指定します。
+`value`には、ご自身のイメージリポジトリのパスを指定します。
 
 コピー&ペースト用
 ```linuxコマンド
