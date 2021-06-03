@@ -9,6 +9,7 @@ Ochacafe4 #3 CI/CD最新事情
 
 Kubernetesクラスタ構築されていることが前提です。
 
+コピー&ペースト用
 ```kubectlコマンド
 kubectl apply --filename https://storage.googleapis.com/tekton-releases/pipeline/latest/release.yaml
 ```
@@ -64,6 +65,7 @@ service/tekton-pipelines-webhook created
 
 以下2つのPodがRunningとなれば完了です。
 
+コピー&ペースト用
 ```kubectlコマンド
 kubectl get pods --namespace tekton-pipelines
 ```
@@ -78,6 +80,7 @@ tekton-pipelines-webhook-57bfb4b4d7-bj85t      1/1     Running   0          49s
 
 ### TEKTON Dashboard Install
 
+コピー&ペースト用
 ```kubectlコマンド
 kubectl apply --filename https://storage.googleapis.com/tekton-releases/dashboard/latest/tekton-dashboard-release.yaml
 ```
@@ -105,6 +108,7 @@ clusterrolebinding.rbac.authorization.k8s.io/tekton-dashboard-extensions created
 
 ServiceのタイプをLoadBalancerに変更して、外部からアクセスできるようにします。
 
+コピー&ペースト用
 ```kubectlコマンド
 kubectl patch service tekton-dashboard -n tekton-pipelines -p '{"spec": {"type": "LoadBalancer"}}'
 ```
@@ -116,6 +120,7 @@ service/tekton-dashboard patched
 
 EXTERNAL-IPを確認します。ここでは、コマンド結果から「140.83.50.157:9097」にブラウザでアクセスします。
 
+コピー&ペースト用
 ```kubectlコマンド
 kubectl get svc -n tekton-pipelines
 ```
@@ -131,20 +136,24 @@ tekton-pipelines-webhook      ClusterIP      10.96.124.31    <none>          909
 
 ### TEKTON CLI Install
 
+コピー&ペースト用
 ```linuxコマンド
 curl -LO https://github.com/tektoncd/cli/releases/download/v0.18.0/tkn_0.18.0_Linux_x86_64.tar.gz
 ```
 
 OCI Cloud Shellの場合は、以下の手順を実施します。それ以外は、任意の場所に格納して、パスを通してください。
 
+コピー&ペースト用
 ```linuxコマンド
 cd
 ```
 
+コピー&ペースト用
 ```linuxコマンド
 mkdir bin
 ```
 
+コピー&ペースト用
 ```linuxコマンド
 tar -xvzf tkn_0.18.0_Linux_x86_64.tar.gz
 ```
@@ -157,24 +166,28 @@ README.md
 tkn
 ```
 
+コピー&ペースト用
 ```linuxコマンド
 mv tkn bin
 ```
 
 パスを通します。$homeはご自身のホームディレクトリになります。
 
+コピー&ペースト用
 ```linuxコマンド
 export PATH="$PATH:/home/$home/bin"
 ```
 
 不要ファイルを削除します。
 
+コピー&ペースト用
 ```linuxコマンド
 rm -rf LICENSE README.md tkn_0.18.0_Linux_x86_64.tar.gz
 ```
 
 tknコマンドを実行してバージョンを確認します。
 
+コピー&ペースト用
 ```tknコマンド
 tkn version
 ```
@@ -191,6 +204,7 @@ Dashboard version: v0.17.0
 
 本リポジトリにある'tekton'ディレクトリ内にある01～07のマニフェストファイルを'kubectl apply'コマンドを実行します。
 
+コピー&ペースト用
 ```linuxコマンド
 cd tekton
 ```
@@ -198,6 +212,7 @@ cd tekton
 'annotations'のULR、'username'、'password'は、ご自身のコンテナレジストリの情報を入力してください。OCIRの場合は、各リージョンは[こちら](https://docs.oracle.com/ja-jp/iaas/Content/Registry/Concepts/registryprerequisites.htm)で確認してください。
 
 
+コピー&ペースト用
 ```linuxコマンド
 cat 01-secret-serviceaccount.yaml
 ```
@@ -224,6 +239,7 @@ secrets:
   - name: basic-user-pass
 ```
 
+コピー&ペースト用
 ```kubectlコマンド
 kubectl apply -f 01-secret-serviceaccount.yaml
 ```
@@ -237,6 +253,7 @@ serviceaccount/build-bot created
 
 'value'には、'git clone'するご自身のgitリポジトリを指定します。
 
+コピー&ペースト用
 ```linuxコマンド
 cat 02-gitPipelineResource.yaml
 ```
@@ -257,6 +274,7 @@ spec:
       value: xxxxxxxxxx
 ```
 
+コピー&ペースト用
 ```kubectlコマンド
 kubectl apply -f 02-gitPipelineResource.yaml
 ```
@@ -269,6 +287,7 @@ pipelineresource.tekton.dev/hello-world-go-git created
 
 'value'には、ご自身のイメージリポジトリのパスを指定します。
 
+コピー&ペースト用
 ```linuxコマンド
 cat 03-imagePipelineResource.yaml
 ```
@@ -287,6 +306,7 @@ spec:
       value: xxxxxxxxx/hello-world-go-app
 ```
 
+コピー&ペースト用
 ```kubectlコマンド
 kubectl apply -f 03-imagePipelineResource.yaml
 ```
@@ -297,6 +317,7 @@ $ kubectl apply -f 03-imagePipelineResource.yaml
 pipelineresource.tekton.dev/hello-world-go-image created
 ```
 
+コピー&ペースト用
 ```kubectlコマンド
 kubectl apply -f 04-task.yaml
 ```
@@ -307,6 +328,7 @@ $ kubectl apply -f 04-task.yaml
 task.tekton.dev/build-and-push created
 ```
 
+コピー&ペースト用
 ```kubectlコマンド
 kubectl apply -f 05-taskrun.yaml
 ```
@@ -317,6 +339,7 @@ $ kubectl apply -f 05-taskrun.yaml
 taskrun.tekton.dev/build-push-task-run created
 ```
 
+コピー&ペースト用
 ```kubectlコマンド
 kubectl apply -f 06-pipeline.yaml
 ```
@@ -327,6 +350,7 @@ $ kubectl apply -f 06-pipeline.yaml
 pipeline.tekton.dev/build-push-pipeline created
 ```
 
+コピー&ペースト用
 ```kubectlコマンド
 kubectl apply -f 07-pipelinerun.yaml
 ```
@@ -339,6 +363,7 @@ pipelinerun.tekton.dev/build-push-pr created
 
 TEKTON Dashboardで状況を確認できます。以下コマンドの実行でも確認できます。
 
+コピー&ペースト用
 ```tknコマンド
 tkn pipelinerun logs build-push-pr
 ```
