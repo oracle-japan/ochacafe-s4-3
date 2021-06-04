@@ -696,15 +696,15 @@ Password:argocd
 以下を設定します。
 
 - GENERAL
- - Application Name:gitops-go-app
- - Project:default
- - SYNC POLICY:Automatic
+    - Application Name:gitops-go-app
+    - Project:default
+    - SYNC POLICY:Automatic
 - SOURCE
- - Repository URL:ご自身のConfigリポジトリ
- - Path:gitops-helm
+    - Repository URL:ご自身のConfigリポジトリ
+    - Path:gitops-helm
 - DESTINATION
- - Cluster URL:https://kubernetes.default.svc
- - Namespace:default
+    - Cluster URL:https://kubernetes.default.svc
+    - Namespace:default
 
 HELM
 VALUES FILES:values.yaml
