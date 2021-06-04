@@ -413,3 +413,305 @@ $ tkn pipelinerun logs build-push-pr
 [build-and-push : image-digest-exporter-7r87w] {"severity":"INFO","timestamp":"2021-06-03T06:55:34.719032609Z","caller":"logging/config.go:117","message":"Logging level set to: info"}
 [build-and-push : image-digest-exporter-7r87w] {"severity":"INFO","timestamp":"2021-06-03T06:55:34.719137347Z","caller":"imagedigestexporter/main.go:59","message":"No index.json found for: builtImage","commit":"7ca5d61"}
 ```
+
+## ArgoCD
+
+### ArgoCD Install
+
+**コピー&ペースト用**
+```
+helm repo add argo https://argoproj.github.io/argo-helm
+```
+
+**コマンド結果**
+```
+$ helm repo add argo https://argoproj.github.io/argo-helm
+"argo" has been added to your repositories
+```
+
+**コピー&ペースト用**
+```
+helm repo update
+```
+
+**コマンド結果**
+```
+$ helm repo update
+Hang tight while we grab the latest from your chart repositories...
+...Successfully got an update from the "argo" chart repository
+Update Complete. ⎈Happy Helming!⎈
+```
+
+**コピー&ペースト用**
+```
+helm search repo argocd
+```
+
+**コマンド結果**
+```
+$ helm search repo argocd
+NAME                            CHART VERSION   APP VERSION     DESCRIPTION                                       
+argo/argocd-applicationset      0.1.6           v0.1.0          A Helm chart for installing ArgoCD ApplicationSet 
+argo/argocd-notifications       1.4.0           1.1.1           A Helm chart for ArgoCD notifications, an add-o...
+argo/argo-cd                    3.6.6           2.0.3           A Helm chart for ArgoCD, a declarative, GitOps ...
+```
+
+**コピー&ペースト用**
+```
+kubectl create namespace argocd
+```
+
+**コマンド結果**
+```
+$ kubectl create namespace argocd
+namespace/argocd created
+```
+
+**コピー&ペースト用**
+```
+kubectl get ns argocd
+```
+
+**コマンド結果**
+```
+$ kubectl get ns argocd
+NAME     STATUS   AGE
+argocd   Active   63s
+```
+
+**コピー&ペースト用**
+```
+helm install argo-cd -n argocd argo/argo-cd --version 3.6.6
+```
+
+**コマンド結果**
+```
+$ helm install argo-cd -n argocd argo/argo-cd --version 3.6.6
+manifest_sorter.go:192: info: skipping unknown hook: "crd-install"
+manifest_sorter.go:192: info: skipping unknown hook: "crd-install"
+NAME: argo-cd
+LAST DEPLOYED: Fri Jun  4 07:34:25 2021
+NAMESPACE: argocd
+STATUS: deployed
+REVISION: 1
+TEST SUITE: None
+NOTES:
+In order to access the server UI you have the following options:
+
+1. kubectl port-forward service/argo-cd-argocd-server -n argocd 8080:443
+
+    and then open the browser on http://localhost:8080 and accept the certificate
+
+2. enable ingress in the values file `server.ingress.enabled` and either
+      - Add the annotation for ssl passthrough: https://github.com/argoproj/argo-cd/blob/master/docs/operator-manual/ingress.md#option-1-ssl-passthrough
+      - Add the `--insecure` flag to `server.extraArgs` in the values file and terminate SSL at your ingress: https://github.com/argoproj/argo-cd/blob/master/docs/operator-manual/ingress.md#option-2-multiple-ingress-objects-and-hosts
+
+
+After reaching the UI the first time you can login with username: admin and the random password generated during the installation. You can find the password by running:
+
+kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 -d
+
+(You should delete the initial secret afterwards as suggested by the Getting Started Guide: https://github.com/argoproj/argo-cd/blob/master/docs/getting_started.md#4-login-using-the-cli)
+```
+
+**コピー&ペースト用**
+```
+kubectl get pods,services -n argocd
+```
+
+**コマンド結果**
+```
+$ kubectl get pods,services -n argocd
+NAME                                                         READY   STATUS    RESTARTS   AGE
+pod/argo-cd-argocd-application-controller-5d559b8cfc-szf5z   1/1     Running   0          64s
+pod/argo-cd-argocd-dex-server-74b56bbbc4-2dpfd               1/1     Running   0          64s
+pod/argo-cd-argocd-redis-567c5bb96-ljvmw                     1/1     Running   0          64s
+pod/argo-cd-argocd-repo-server-76449ddf69-f5tdh              1/1     Running   0          64s
+pod/argo-cd-argocd-server-66f87579f-52tcr                    1/1     Running   0          64s
+
+NAME                                            TYPE        CLUSTER-IP      EXTERNAL-IP   PORT(S)             AGE
+service/argo-cd-argocd-application-controller   ClusterIP   10.96.126.122   <none>        8082/TCP            64s
+service/argo-cd-argocd-dex-server               ClusterIP   10.96.4.52      <none>        5556/TCP,5557/TCP   64s
+service/argo-cd-argocd-redis                    ClusterIP   10.96.84.111    <none>        6379/TCP            64s
+service/argo-cd-argocd-repo-server              ClusterIP   10.96.174.128   <none>        8081/TCP            64s
+service/argo-cd-argocd-server                   ClusterIP   10.96.101.57    <none>        80/TCP,443/TCP      64s
+```
+
+**コピー&ペースト用**
+```
+kubectl patch service argo-cd-argocd-server -n argocd -p '{"spec": {"type": "LoadBalancer"}}'
+```
+
+**コマンド結果**
+```
+$ kubectl patch service argo-cd-argocd-server -n argocd -p '{"spec": {"type": "LoadBalancer"}}'
+service/argo-cd-argocd-server patched
+```
+
+**コピー&ペースト用**
+```
+kubectl get service -n argocd
+```
+
+**コマンド結果**
+```
+$ kubectl get service -n argocd
+NAME                                    TYPE           CLUSTER-IP      EXTERNAL-IP     PORT(S)                      AGE
+argo-cd-argocd-application-controller   ClusterIP      10.96.126.122   <none>          8082/TCP                     5m52s
+argo-cd-argocd-dex-server               ClusterIP      10.96.4.52      <none>          5556/TCP,5557/TCP            5m52s
+argo-cd-argocd-redis                    ClusterIP      10.96.84.111    <none>          6379/TCP                     5m52s
+argo-cd-argocd-repo-server              ClusterIP      10.96.174.128   <none>          8081/TCP                     5m52s
+argo-cd-argocd-server                   LoadBalancer   10.96.101.57    168.138.51.60   80:31859/TCP,443:31707/TCP   5m52s
+```
+
+**コピー&ペースト用**
+```
+wget https://github.com/argoproj/argo-cd/releases/download/v2.0.3/argocd-linux-amd64
+```
+
+ブラウザを起動して、「35.200.124.246」にアクセスします。
+
+**コマンド結果**
+```
+$ wget https://github.com/argoproj/argo-cd/releases/download/v2.0.3/argocd-linux-amd64
+--2021-06-04 07:42:34--  https://github.com/argoproj/argo-cd/releases/download/v2.0.3/argocd-linux-amd64
+Resolving github.com (github.com)... 140.82.112.4
+Connecting to github.com (github.com)|140.82.112.4|:443... connected.
+HTTP request sent, awaiting response... 302 Found
+Location: https://github-releases.githubusercontent.com/120896210/9d57e880-bf13-11eb-9dcc-1a6e5fd64fe3?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAIWNJYAX4CSVEH53A%2F20210604%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20210604T074234Z&X-Amz-Expires=300&X-Amz-Signature=47360d3f3a8f11451a4d97d7165283ab4942559530df1d896c4e64b3e019058c&X-Amz-SignedHeaders=host&actor_id=0&key_id=0&repo_id=120896210&response-content-disposition=attachment%3B%20filename%3Dargocd-linux-amd64&response-content-type=application%2Foctet-stream [following]
+--2021-06-04 07:42:34--  https://github-releases.githubusercontent.com/120896210/9d57e880-bf13-11eb-9dcc-1a6e5fd64fe3?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAIWNJYAX4CSVEH53A%2F20210604%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20210604T074234Z&X-Amz-Expires=300&X-Amz-Signature=47360d3f3a8f11451a4d97d7165283ab4942559530df1d896c4e64b3e019058c&X-Amz-SignedHeaders=host&actor_id=0&key_id=0&repo_id=120896210&response-content-disposition=attachment%3B%20filename%3Dargocd-linux-amd64&response-content-type=application%2Foctet-stream
+Resolving github-releases.githubusercontent.com (github-releases.githubusercontent.com)... 185.199.108.154, 185.199.109.154, 185.199.110.154, ...
+Connecting to github-releases.githubusercontent.com (github-releases.githubusercontent.com)|185.199.108.154|:443... connected.
+HTTP request sent, awaiting response... 200 OK
+Length: 89451754 (85M) [application/octet-stream]
+Saving to: ‘argocd-linux-amd64’
+
+100%[=======================================================================================================>] 89,451,754  98.9MB/s   in 0.9s   
+
+2021-06-04 07:42:35 (98.9 MB/s) - ‘argocd-linux-amd64’ saved [89451754/89451754]
+```
+
+**コピー&ペースト用**
+```
+$ mv argocd-linux-amd64 argocd
+```
+
+**コピー&ペースト用**
+```
+$ chmod +x argocd
+```
+
+tknコマンド同じように`bin`ディレクトリに格納します。
+
+**コピー&ペースト用**
+```
+$ mv argocd bin
+```
+
+**コピー&ペースト用**
+```
+argocd version
+```
+
+**コマンド結果**
+```
+$ argocd version
+argocd: v2.0.3+8d2b13d
+  BuildDate: 2021-05-27T17:38:37Z
+  GitCommit: 8d2b13d733e1dff7d1ad2c110ed31be4804406e2
+  GitTreeState: clean
+  GoVersion: go1.16
+  Compiler: gc
+  Platform: linux/amd64
+FATA[0000] Failed to establish connection to 140.83.57.157:443: EOF
+```
+
+ArgoCD WebUIのURLを取得します。
+
+
+**コピー&ペースト用**
+```
+$ export ARGOCD_EXTERNAL_IP=$(kubectl get svc argo-cd-argocd-server -n argocd -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
+```
+
+WebUIの初期パスワードを生成します。
+
+**コピー&ペースト用**
+```
+kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 -d
+```
+
+**コマンド結果**
+```
+$ kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 -d
+SGFxgfUJdKaTiqXA
+```
+
+argocdコマンドでログインして、初期パスワードを`argocd`に変更します。
+
+**コピー&ペースト用**
+```
+argocd --insecure login ${ARGOCD_EXTERNAL_IP} --username admin
+```
+
+**コマンド結果**
+```
+$ argocd --insecure login ${ARGOCD_EXTERNAL_IP} --username admin
+Password: 
+'admin:login' logged in successfully
+Context '168.138.51.60' updated
+```
+
+初期パスワードを入力して、新パスワードとして`argocd`を二回入力します。
+
+**コピー&ペースト用**
+```
+argocd  account update-password --account admin
+```
+
+**コマンド結果**
+```
+$ argocd  account update-password --account admin
+*** Enter current password: 
+*** Enter new password: 
+*** Confirm new password: 
+Password updated
+Context '168.138.51.60' updated
+```
+
+ブラウザで「168.138.51.60」にアクセスして、以下の情報を入力してログインします。
+
+Username:admin
+Password:argocd
+
+![ArgoCD WebUI](image/ochacafe-s4-3-01.png "ArgoCD WebUI")
+
+`NEW APP`ボタンをクリックします。
+
+![NEW APP](image/ochacafe-s4-3-02.png "NEW APP")
+
+
+ご自身のConfgリポジトリ（git）に本リポジトリにある`argocd`にある`gitops-helm`を格納し他状態で、
+以下を設定します。
+
+GENERAL
+Application Name:gitops-go-app
+Project:default
+SYNC POLICY:Automatic
+
+SOURCE
+Repository URL:ご自身のConfigリポジトリ
+Path:gitops-helm
+
+DESTINATION
+Cluster URL:https://kubernetes.default.svc
+Namespace:default
+
+HELM
+VALUES FILES:values.yaml
+
+![Config](image/ochacafe-s4-3-03.png "Config")
+
+Syncしていることを確認します。この表示自体をクリックすると全体画面に遷移します。
+
+![Cluster Status](image/ochacafe-s4-3-05.png "Cluster Status")
