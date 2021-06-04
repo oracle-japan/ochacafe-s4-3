@@ -564,12 +564,14 @@ argo-cd-argocd-repo-server              ClusterIP      10.96.174.128   <none>   
 argo-cd-argocd-server                   LoadBalancer   10.96.101.57    168.138.51.60   80:31859/TCP,443:31707/TCP   5m52s
 ```
 
+ブラウザを起動して、「35.200.124.246」にアクセスします。
+
+### argocd CLI Install
+
 **コピー&ペースト用**
 ```
 wget https://github.com/argoproj/argo-cd/releases/download/v2.0.3/argocd-linux-amd64
 ```
-
-ブラウザを起動して、「35.200.124.246」にアクセスします。
 
 **コマンド結果**
 ```
@@ -627,7 +629,6 @@ FATA[0000] Failed to establish connection to 140.83.57.157:443: EOF
 ```
 
 ArgoCD WebUIのURLを取得します。
-
 
 **コピー&ペースト用**
 ```
@@ -694,18 +695,16 @@ Password:argocd
 ご自身のConfgリポジトリ（git）に本リポジトリにある`argocd`にある`gitops-helm`を格納し他状態で、
 以下を設定します。
 
-GENERAL
-Application Name:gitops-go-app
-Project:default
-SYNC POLICY:Automatic
-
-SOURCE
-Repository URL:ご自身のConfigリポジトリ
-Path:gitops-helm
-
-DESTINATION
-Cluster URL:https://kubernetes.default.svc
-Namespace:default
+- GENERAL
+ - Application Name:gitops-go-app
+ - Project:default
+ - SYNC POLICY:Automatic
+- SOURCE
+ - Repository URL:ご自身のConfigリポジトリ
+ - Path:gitops-helm
+- DESTINATION
+ - Cluster URL:https://kubernetes.default.svc
+ - Namespace:default
 
 HELM
 VALUES FILES:values.yaml
@@ -713,5 +712,7 @@ VALUES FILES:values.yaml
 ![Config](image/ochacafe-s4-3-03.png "Config")
 
 Syncしていることを確認します。この表示自体をクリックすると全体画面に遷移します。
+
+![Sync](image/ochacafe-s4-3-04.png "Sync")
 
 ![Cluster Status](image/ochacafe-s4-3-05.png "Cluster Status")
