@@ -1,0 +1,14 @@
+#Common
+label: giops
+
+#Deployment
+replicas: 3
+image:
+  repository: kix.ocir.io/orasejapan/yutichik/gitops-go-app
+  tag: 13
+
+imageConfig:
+  pullPolicy: IfNotPresent
+
+#Service
+service_type: LoadBalancer

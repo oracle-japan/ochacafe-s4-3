@@ -692,7 +692,7 @@ Password:argocd
 ![NEW APP](image/ochacafe-s4-3-02.png "NEW APP")
 
 
-ご自身のConfgリポジトリ（git）に本リポジトリにある`argocd`にある`gitops-helm`を格納し他状態で、
+ご自身のConfgリポジトリ（git）に本リポジトリにある`config-repo`にある`gitops-helm`と`.github`を格納した状態で、
 以下を設定します。
 
 - GENERAL
