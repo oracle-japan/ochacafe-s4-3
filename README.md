@@ -632,7 +632,7 @@ ArgoCD WebUIのURLを取得します。
 
 **コピー&ペースト用**
 ```
-$ export ARGOCD_EXTERNAL_IP=$(kubectl get svc argo-cd-argocd-server -n argocd -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
+export ARGOCD_EXTERNAL_IP=$(kubectl get svc argo-cd-argocd-server -n argocd -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
 ```
 
 WebUIの初期パスワードを生成します。
@@ -716,3 +716,152 @@ Syncしていることを確認します。この表示自体をクリックす�
 ![Sync](image/ochacafe-s4-3-04.png "Sync")
 
 ![Cluster Status](image/ochacafe-s4-3-05.png "Cluster Status")
+
+## Gatekeeper
+
+### Gatekeeper Install
+
+**コピー&ペースト用**
+```
+kubectl apply -f https://raw.githubusercontent.com/open-policy-agent/gatekeeper/v3.1.3/deploy/gatekeeper.yaml
+```
+
+**コマンド結果**
+```
+$ kubectl apply -f https://raw.githubusercontent.com/open-policy-agent/gatekeeper/v3.1.3/deploy/gatekeeper.yaml
+namespace/gatekeeper-system created
+customresourcedefinition.apiextensions.k8s.io/configs.config.gatekeeper.sh created
+customresourcedefinition.apiextensions.k8s.io/constraintpodstatuses.status.gatekeeper.sh created
+customresourcedefinition.apiextensions.k8s.io/constrainttemplatepodstatuses.status.gatekeeper.sh created
+customresourcedefinition.apiextensions.k8s.io/constrainttemplates.templates.gatekeeper.sh created
+serviceaccount/gatekeeper-admin created
+role.rbac.authorization.k8s.io/gatekeeper-manager-role created
+clusterrole.rbac.authorization.k8s.io/gatekeeper-manager-role created
+rolebinding.rbac.authorization.k8s.io/gatekeeper-manager-rolebinding created
+clusterrolebinding.rbac.authorization.k8s.io/gatekeeper-manager-rolebinding created
+secret/gatekeeper-webhook-server-cert created
+service/gatekeeper-webhook-service created
+deployment.apps/gatekeeper-audit created
+deployment.apps/gatekeeper-controller-manager created
+validatingwebhookconfiguration.admissionregistration.k8s.io/gatekeeper-validating-webhook-configuration created
+```
+
+本リポジトリにある`gatekeeper`ディレクトリ内にある各マニフェストファイルを`kubectl apply`コマンドで適用します。
+
+**コピー&ペースト用**
+```
+cd
+```
+
+**コピー&ペースト用**
+```
+cd gatekeeper
+```
+
+**コピー&ペースト用**
+```
+cat constrainttemplate.yaml
+```
+
+**コマンド結果**
+```
+$ cat constrainttemplate.yaml
+apiVersion: templates.gatekeeper.sh/v1beta1
+kind: ConstraintTemplate
+metadata:
+  name: notlatestimage
+spec:
+  crd:
+    spec:
+      names:
+        kind: NotLatestImage
+        listKind: NotLatestImageList
+        plural: notlatestimages
+        singular: notlatestimage
+  targets:
+    - target: admission.k8s.gatekeeper.sh
+      rego: |
+        package notlatestimage
+
+        violation[{"msg": msg}]{
+          input.review.object.kind == "Pod"
+          imagetag := input.review.object.spec.containers[_].image
+          endswith(imagetag,"latest")
+          msg := "Can't use image of latest tag !!"
+        }
+```
+
+**コピー&ペースト用**
+```
+kubectl apply -f constrainttemplate.yaml
+```
+
+**コマンド結果**
+```
+$ kubectl apply -f constrainttemplate.yaml
+constrainttemplate.templates.gatekeeper.sh/notlatestimage created
+```
+
+
+
+**コピー&ペースト用**
+```
+cat constraints.yaml
+```
+
+**コマンド結果**
+```
+$ cat constraints.yaml
+apiVersion: constraints.gatekeeper.sh/v1beta1
+kind: NotLatestImage
+metadata:
+  name: notlatestimage
+spec:
+  match:
+    kinds:
+    - apiGroups: [""]
+      kinds: ["Pod"]
+        }
+```
+
+**コピー&ペースト用**
+```
+kubectl apply -f constraints.yaml
+```
+
+**コマンド結果**
+```
+$ kubectl apply -f constraints.yaml
+notlatestimage.constraints.gatekeeper.sh/notlatestimage created
+```
+
+
+**コピー&ペースト用**
+```
+cat banlataest.yaml
+```
+
+**コマンド結果**
+```
+$ cat banlataest.yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: pod-nginx-latest
+spec:
+  containers:
+  - name: nginx-latesttag
+    image: nginx:latest
+```
+
+**コピー&ペースト用**
+```
+kubectl apply -f banlataest.yaml
+```
+
+**コマンド結果**
+```
+$ kubectl apply -f banlataest.yaml
+Error from server ([denied by notlatestimage] Can't use image of latest tag !!): error when creating "banlataest.yaml": admission webhook "validation.gatekeeper.sh" denied the request: [denied by notlatestimage] Can't use image of latest tag !!
+```
+
