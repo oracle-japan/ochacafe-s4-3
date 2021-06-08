@@ -802,8 +802,6 @@ $ kubectl apply -f constrainttemplate.yaml
 constrainttemplate.templates.gatekeeper.sh/notlatestimage created
 ```
 
-
-
 **コピー&ペースト用**
 ```
 cat constraints.yaml
@@ -821,7 +819,6 @@ spec:
     kinds:
     - apiGroups: [""]
       kinds: ["Pod"]
-        }
 ```
 
 **コピー&ペースト用**
@@ -834,7 +831,6 @@ kubectl apply -f constraints.yaml
 $ kubectl apply -f constraints.yaml
 notlatestimage.constraints.gatekeeper.sh/notlatestimage created
 ```
-
 
 **コピー&ペースト用**
 ```
