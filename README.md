@@ -2,13 +2,15 @@
 Ochacafe4 #3 CI/CD最新事情
 
 デモ環境の構築方法、資材置き場です。
-OKE + OCIR + GitHub Actions + ArgoCD
+
+- TEKTONデモ環境
+- 手元で始めるGitOpsデモ環境（OKE + OCIR + GitHub Actions + ArgoCD)
+
+事前に[Kubernetesクラスタ（OKE）の構築](https://docs.oracle.com/ja-jp/iaas/Content/ContEng/Tasks/contengcreatingclusterusingoke.htm)、[OCIR初期セットアップ](https://docs.oracle.com/ja-jp/iaas/Content/Registry/Concepts/registryprerequisites.htm)が完了していることが前提です。
 
 ## TEKTON
 
 ### TEKTON Install
-
-Kubernetesクラスタ構築されていることが前提です。
 
 **コピー&ペースト用**
 ```
