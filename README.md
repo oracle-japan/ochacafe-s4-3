@@ -426,22 +426,22 @@ codeには本リポジトリの`code-repo`、configには`config-repo`内にあ�
 
 ### Personal Access Tokensの作成
 
-1.ヘッダーメニューにあるアカウントアイコンのプルダウンメニューを開いて「Settings」を選択します。
-2.左メニュー「Developer settings」-「Personal access tokens」を選択します。
-3.「Generate new token」ボタンをクリックして、「note」に任意名、「repo,workflow,admin:org, delete_repo 」にチェックを入れて、「Generate token」ボタンをクリックします。
-4.トークンが生成されるので、エディタなどにコピー&ペーストして保存します。
+1. ヘッダーメニューにあるアカウントアイコンのプルダウンメニューを開いて「Settings」を選択します。
+2. 左メニュー「Developer settings」-「Personal access tokens」を選択します。
+3. 「Generate new token」ボタンをクリックして、「note」に任意名、「repo,workflow,admin:org, delete_repo 」にチェックを入れて、「Generate token」ボタンをクリックします。
+4. トークンが生成されるので、エディタなどにコピー&ペーストして保存します。
 
 ### Secretの作成
 
 codeリポジトリで利用するGitHub ActionsのYAMLファイル内にあるSecretの設定を行います。
 
-1.GitHub上部メニュー「Settings」を選択して、左メニュー「Secrets」を選択します。
-2.右上の「New repository secret」をクリックして、「Name」に「DOCKER_USERNAME」と入力してご自身のコンテナレジストリのアカウント名を設定します。
-3.右上の「New repository secret」をクリックして、「Name」に「DOCKER_PASSWORD」と入力してご自身のコンテナレジストリのパスワードを設定します。
-4.右上の「New repository secret」をクリックして、「Name」に「USERNAME」と入力してご自身のGitHubアカウント名を設定します。
-5.右上の「New repository secret」をクリックして、「Name」に「GH_PASSWORD」と入力してご自身のGitHubパスワードを設定します。
-6.右上の「New repository secret」をクリックして、「Name」に「EMAIL」と入力してご自身のGitHubに登録しているメールアドレスを設定します。
-7.右上の「New repository secret」をクリックして、「Name」に「PERSONAL_ACCESS_TOKEN」と入力して事前に作成したトークンを設定します。
+1. GitHub上部メニュー「Settings」を選択して、左メニュー「Secrets」を選択します。
+2. 右上の「New repository secret」をクリックして、「Name」に「DOCKER_USERNAME」と入力してご自身のコンテナレジストリのアカウント名を設定します。
+3. 右上の「New repository secret」をクリックして、「Name」に「DOCKER_PASSWORD」と入力してご自身のコンテナレジストリのパスワードを設定します。
+4. 右上の「New repository secret」をクリックして、「Name」に「USERNAME」と入力してご自身のGitHubアカウント名を設定します。
+5. 右上の「New repository secret」をクリックして、「Name」に「GH_PASSWORD」と入力してご自身のGitHubパスワードを設定します。
+6. 右上の「New repository secret」をクリックして、「Name」に「EMAIL」と入力してご自身のGitHubに登録しているメールアドレスを設定します。
+7. 右上の「New repository secret」をクリックして、「Name」に「PERSONAL_ACCESS_TOKEN」と入力して事前に作成したトークンを設定します。
 
 codeリポジトリのmain.yml内の「xxxxxxxxxx」となっている箇所には、ご自身のイメージレジストリを指定するのを忘れないでください。
 
