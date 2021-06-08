@@ -20,6 +20,12 @@ jobs:
           # タグ付与
           docker tag xxxxxxxxxx/gitops-go-app:${{ github.run_number }} xxxxxxxxxx/gitops-go-app:${{ github.run_number }}
 
+        # dockleによるイメージ診断
+      - name: Run dockle
+        uses: hands-lab/dockle-action@v1
+        with:
+          image: xxxxxxxxxx/gitops-go-app:${{ github.run_number }}
+
         # Trivyによるイメージスキャン
       - name: Run Trivy vulnerability scanner
         uses: aquasecurity/trivy-action@master
@@ -34,7 +40,7 @@ jobs:
       - name: Login to OCIR
         uses: docker/login-action@v1
         with:
-          registry: kix.ocir.io
+          registry: xxxxxxxxxx #OCIRのレジストリURL
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
 
